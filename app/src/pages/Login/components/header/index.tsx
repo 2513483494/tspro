@@ -1,7 +1,7 @@
 import './index.less'
 import { Logo } from '../logo'
 
-export const Loginheader = (): JSX.Element => {
+const Loginheader = (): JSX.Element => {
     return (
         <div className='loginheader'>
             <Logo />
@@ -11,3 +11,5 @@ export const Loginheader = (): JSX.Element => {
         </div>
     )
 }
+
+export default Loginheader

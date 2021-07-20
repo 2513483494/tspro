@@ -1,7 +1,7 @@
 import './index.less'
 import { Button } from 'antd'
 
-export const Loginfooter = (): JSX.Element => {
+const Loginfooter = (): JSX.Element => {
     return (
         <div className='loginfooter'>
             <div><Button type='link'>author: xjq</Button></div>
@@ -10,3 +10,5 @@ export const Loginfooter = (): JSX.Element => {
         </div>
     )
 }
+
+export default Loginfooter

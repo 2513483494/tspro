@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-export const useTitle = (title) => {
+export const useTitle = (title: string) => {
     useEffect(() => {
         document.title = title
     }, [title])
@@ -9,7 +9,7 @@ export const useTitle = (title) => {
     return
 }
 export const useUpdate = () => {
-    const [, setFlag] = useState()
+    const [, setFlag] = useState<any>()
     const update = () => {
         setFlag(Date.now())
     }
@@ -17,7 +17,7 @@ export const useUpdate = () => {
 }
 //query为参数键值对象
 export function useQuery() {
-    const [query, setQueryObject] = useState('');
+    const [query, setQueryObject] = useState<any>({});
     const mapParamsToQuery = () => {
         const queryObject = {}
         const paramsString = window.location.href.indexOf('?') === -1 ? '' : window.location.href.slice(window.location.href.indexOf('?') + 1)
@@ -37,7 +37,7 @@ export function useQuery() {
     useEffect(() => {
         mapParamsToQuery()
     }, [])
-    const format = (obj) => {
+    const format = (obj: any) => {
         let str = '?'
         for (let i in obj) {
             if (obj.hasOwnProperty(i)) {
@@ -46,7 +46,7 @@ export function useQuery() {
         }
         return str
     }
-    const setQuery = (obj) => {
+    const setQuery = (obj: any) => {
         window.location.href = window.location.href.indexOf('?') === -1 ?
             window.location.href + format(obj) :
             window.location.href.slice(0, window.location.href.indexOf('?')) + format(obj);
@@ -56,7 +56,7 @@ export function useQuery() {
 
     return [query, setQuery]
 }
-export const useFetch = (url, data1 = {}, type = 'GET') => {
+export const useFetch = (url: string, data1 = {}, type = 'GET') => {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -76,13 +76,14 @@ export const useFetch = (url, data1 = {}, type = 'GET') => {
         }).catch(error => {
             setError(error);
         }).finally(() => setLoading(false))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url, type])
     return { loading, error, data };
 }
 
 export function useLocationStorage(key = 'default', value = '') {
     const [v, setv] = useState(value)
-    const setValue = (v1) => {
+    const setValue = (v1:any) => {
         localStorage.setItem(key, v1)
         setv(v1)
     }
