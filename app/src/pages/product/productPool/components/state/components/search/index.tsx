@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import StoreSelect from '@components/storeList'
 import { useQuery } from '@hooks/index'
 import './index.less'
-import { Form, Row, Col, Input, Button, Select } from 'antd'
+import { Form, Row, Col, Input, Button, Select, Checkbox } from 'antd'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import debounce from 'lodash/debounce'
 
@@ -10,6 +10,7 @@ const { Option } = Select
 
 const SearchFields = () => {
     const [expand, setExpand] = useState(false)
+    const [others, setothers] = useState()
     const [form] = Form.useForm()
 
     //组件返回的已选ids
@@ -18,19 +19,24 @@ const SearchFields = () => {
     const [currentStores, setStores] = useState<any>()
     const [query, setQuery] = useQuery()
     useEffect(() => {
-        const { name = '', storeIds = 'none' } = query
+        const { name = '', storeIds = 'none', others = '' } = query
         setStores(storeIds.split(','))
         form.setFieldsValue({
             name,
+            others
         })
     }, [form, query])
 
     const onFinish = debounce(() => {
         const value = form.getFieldsValue(['name'])
+        const { page, pageSize } = query
         setQuery({
             name: value.name || '',
             storeIds: storeIds || [],
-            activeKey: 'state'
+            activeKey: 'state',
+            others,
+            page,
+            pageSize
         })
     }, 500)
     function handleChange(value: any) {
@@ -39,6 +45,19 @@ const SearchFields = () => {
     const reset = () => {
         form.resetFields()
         setStores([])
+    }
+    const plainOptions = [
+        {
+            value: 'nopic',
+            label: '无图'
+        },
+        {
+            value: 'onsale',
+            label: '上线'
+        },
+    ]
+    const changeCheckbox = (v: any) => {
+        setothers(v)
     }
     return (
         <div>
@@ -145,6 +164,13 @@ const SearchFields = () => {
                                             <Option key='yes' value="yes">有库存</Option>
                                             <Option key='no' value="no">已售罄</Option>
                                         </Select>
+                                    </Form.Item>
+                                </Col>
+                                <Col span={8} push={1}>
+                                    <Form.Item
+                                        name='others'
+                                    >
+                                        <Checkbox.Group options={plainOptions} defaultValue={['Apple']} onChange={changeCheckbox} />
                                     </Form.Item>
                                 </Col>
                             </>
