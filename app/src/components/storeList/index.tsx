@@ -154,7 +154,7 @@ const StoreSelect = (props: IProps): JSX.Element => {
     const changeSelectedStores = (selectedStores: string[]) => {
         let currStoreList;
         if (selectedStores.length > 10) {
-            selectedStores = selectedStores.slice(1, 11);
+            selectedStores = selectedStores.slice(0, 10);
             console.log(selectedStores)
             message.error('最多选择十个门店！');
             // 其余的均不可选
@@ -179,7 +179,7 @@ const StoreSelect = (props: IProps): JSX.Element => {
             treeCheckable
             treeDefaultExpandAll
             maxTagCount={0}
-            maxTagPlaceholder={() => stores ? <div>已选择{stores.length}个门店</div> : null}
+            maxTagPlaceholder={() => stores ? <div>已选择{stores.length}个门店</div> : ''}
         />
     );
 };

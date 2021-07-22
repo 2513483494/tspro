@@ -3,14 +3,28 @@ import { DownOutlined } from '@ant-design/icons';
 import './index.less'
 import { useHistory } from 'react-router-dom'
 
-const username = localStorage.getItem('username')
 const Logout = () => {
     const history = useHistory()
     const quit = () => {
+        localStorage.setItem('isLogedIn', 'false')
+        localStorage.setItem('currentUser', '')
         history.push('/login')
     }
     const delinfo = () => {
-        localStorage.clear()
+        //localStorage.clear()
+        const u = localStorage.getItem("users")
+        const users = u ? JSON.parse(u) : []
+        console.log(users)
+        for (let i in users) {
+            if (users[i].name === localStorage.getItem('currentUser')) {
+                users.splice(i, 1)
+                console.log(users)
+                localStorage.setItem('users', JSON.stringify(users))
+                break
+            }
+        }
+        localStorage.setItem('currentUser', '')
+        localStorage.setItem('isLogedIn', 'false')
         history.push('/login')
     }
     const menu = (
@@ -31,7 +45,7 @@ const Logout = () => {
         <Dropdown overlay={menu}>
             <Button type='link'>
                 <DownOutlined />
-                <span className='logouttext'>{username}</span>
+                <span className='logouttext'>{localStorage.getItem('currentUser')}</span>
             </Button>
         </Dropdown>
     )

@@ -1,15 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import StoreSelect from '@components/storeList'
-import { useQuery } from '@hooks/index'
 import './index.less'
-import { Form, Row, Col, Input, Button, Select, Checkbox } from 'antd'
-import { DownOutlined, UpOutlined } from '@ant-design/icons'
-import debounce from 'lodash/debounce'
+import { Form, Row, Col, Input, Button, Select, Checkbox, TreeSelect } from 'antd'
+import { addOneProduct } from '@config/index'
 
 const { Option } = Select
 
 const SearchFields = () => {
-    const [expand, setExpand] = useState(false)
     const [others, setothers] = useState()
     const [form] = Form.useForm()
 
@@ -17,28 +14,10 @@ const SearchFields = () => {
     const [storeIds, setStoreids] = useState()
     //url回填的ids
     const [currentStores, setStores] = useState<any>()
-    const [query, setQuery] = useQuery()
-    useEffect(() => {
-        const { name = '', storeIds = 'none', others = '' } = query
-        setStores(storeIds.split(','))
-        form.setFieldsValue({
-            name,
-            others
-        })
-    }, [form, query])
 
-    const onFinish = debounce(() => {
-        const value = form.getFieldsValue(['name'])
-        const { page, pageSize } = query
-        setQuery({
-            name: value.name || '',
-            storeIds: storeIds || [],
-            activeKey: 'state',
-            others,
-            page,
-            pageSize
-        })
-    }, 500)
+    const onFinish = (v: any) => {
+        console.log(v)
+    }
     function handleChange(value: any) {
 
     }
@@ -59,8 +38,26 @@ const SearchFields = () => {
     const changeCheckbox = (v: any) => {
         setothers(v)
     }
+    const mockData = [
+        {
+            title: '李宁',
+            value: 'ln',
+            key: 'ln',
+        },
+        {
+            title: '耐克',
+            value: 'nk',
+            key: 'nk',
+        },
+        {
+            title: '阿迪',
+            value: 'ad',
+            key: 'ad',
+        },
+    ]
     return (
-        <div>
+        <div style={{marginBottom: 20}}>
+            <h1>全国商品池</h1>
             <Form
                 form={form}
                 name="basic"
@@ -77,7 +74,7 @@ const SearchFields = () => {
                             label='商品名称'
                             name='name'
                         >
-                            <Input />
+                            <Input placeholder='可输入商品名称查询' />
                         </Form.Item>
                     </Col>
                     <Col span={8} pull={1}>
@@ -96,11 +93,14 @@ const SearchFields = () => {
                             label='品牌'
                             name='brand'
                         >
-                            <Select defaultValue="ln" onChange={handleChange}>
-                                <Option key='ln' value="ln">李宁</Option>
-                                <Option key='nk' value="nk">耐克</Option>
-                                <Option key='pk' value="pk">匹克</Option>
-                            </Select>
+                            <TreeSelect
+                                treeData={mockData}
+                                value={[]}
+                                onChange={(a) => console.log(a)}
+                                treeCheckable
+                                placeholder='可多选'
+                                allowClear
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={8} pull={1}>
@@ -115,72 +115,16 @@ const SearchFields = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={8} pull={1}>
+
+                    <Col span={8} push={1}>
                         <Form.Item
-                            label='品牌'
-                            name='brand'
+                            name='others'
                         >
-                            <Select defaultValue="ln" onChange={handleChange}>
-                                <Option key='ln' value="ln">李宁</Option>
-                                <Option key='nk' value="nk">耐克</Option>
-                                <Option key='pk' value="pk">匹克</Option>
-                            </Select>
+                            <Checkbox.Group options={plainOptions} defaultValue={['Apple']} onChange={changeCheckbox} />
                         </Form.Item>
                     </Col>
-                    <Col span={8} pull={1}>
-                        <Form.Item
-                            label='库存'
-                            name='storeCount'
-                        >
-                            <Select defaultValue="all" onChange={handleChange}>
-                                <Option key='all' value="all">全部</Option>
-                                <Option key='yes' value="yes">有库存</Option>
-                                <Option key='no' value="no">已售罄</Option>
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    {
-                        expand ? (
-                            <>
-                                <Col span={8} pull={1}>
-                                    <Form.Item
-                                        label='品牌'
-                                        name='brand'
-                                    >
-                                        <Select defaultValue="ln" onChange={handleChange}>
-                                            <Option key='ln' value="ln">李宁</Option>
-                                            <Option key='nk' value="nk">耐克</Option>
-                                            <Option key='pk' value="pk">匹克</Option>
-                                        </Select>
-                                    </Form.Item>
-                                </Col>
-                                <Col span={8} pull={1}>
-                                    <Form.Item
-                                        label='库存'
-                                        name='storeCount'
-                                    >
-                                        <Select defaultValue="all" onChange={handleChange}>
-                                            <Option key='all' value="all">全部</Option>
-                                            <Option key='yes' value="yes">有库存</Option>
-                                            <Option key='no' value="no">已售罄</Option>
-                                        </Select>
-                                    </Form.Item>
-                                </Col>
-                                <Col span={8} push={1}>
-                                    <Form.Item
-                                        name='others'
-                                    >
-                                        <Checkbox.Group options={plainOptions} defaultValue={['Apple']} onChange={changeCheckbox} />
-                                    </Form.Item>
-                                </Col>
-                            </>
-                        ) : null
-                    }
 
-                </Row>
-
-                <Row>
-                    <Col span={24} style={{ textAlign: 'right' }}>
+                    <Col span={8} pull={1} style={{ textAlign: 'right' }}>
                         <Button type="primary" htmlType="submit">
                             查询
                         </Button>
@@ -189,13 +133,6 @@ const SearchFields = () => {
                             onClick={() => reset()}
                         >
                             清空
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                setExpand(!expand)
-                            }}
-                        >
-                            {expand ? <UpOutlined /> : <DownOutlined />} 展开
                         </Button>
                     </Col>
                 </Row>

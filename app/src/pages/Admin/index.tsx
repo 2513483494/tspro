@@ -7,13 +7,14 @@ import './index.less'
 
 const Productpool = lazy(() => import('../product/productPool'))
 const StoreProduct = lazy(() => import('../product/storeProduct'))
+const ChangeInfo = lazy(() => import('../product/changeInfo'))
 
 const { Content, Footer, Sider } = Layout
 
 
 const Admin = (): JSX.Element => {
     const [collapsed, setCollapsed] = useState()
-    if (!localStorage.getItem('username')) {
+    if (localStorage.getItem('isLogedIn') === 'false') {
         return <Redirect to='/login'></Redirect>
     }
     const onCollapse = (collapsed: any) => {
@@ -33,6 +34,8 @@ const Admin = (): JSX.Element => {
                         <Switch>
                             <Route exact path='/admin/storeproduct' component={StoreProduct}></Route>
                             <Route exact path='/admin/productpool' component={Productpool}></Route>
+                            <Route exact path='/admin/productpool/changeinfo' component={ChangeInfo}></Route>
+
                         </Switch>
                     </Suspense>
                 </Content>

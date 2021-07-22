@@ -27,5 +27,17 @@ export const formatTime = (t: any) => {
         return ''
     }
     const date = new Date()
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+    const second = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds()
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${second}`
+}
+
+export const addOneProduct = (value: any) => {
+    const u = localStorage.getItem('products')
+    const datas = u ? JSON.parse(u) : []
+    datas.push(value)
+    localStorage.setItem('products', JSON.stringify(datas))
+}
+
+export const replaceProducts = (value: any) => {
+    localStorage.setItem('products', JSON.stringify(value))
 }
