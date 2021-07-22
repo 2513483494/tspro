@@ -14,11 +14,9 @@ const Logout = () => {
         //localStorage.clear()
         const u = localStorage.getItem("users")
         const users = u ? JSON.parse(u) : []
-        console.log(users)
         for (let i in users) {
             if (users[i].name === localStorage.getItem('currentUser')) {
                 users.splice(i, 1)
-                console.log(users)
                 localStorage.setItem('users', JSON.stringify(users))
                 break
             }

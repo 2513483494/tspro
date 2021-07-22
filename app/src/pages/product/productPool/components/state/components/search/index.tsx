@@ -16,7 +16,6 @@ const SearchFields = () => {
     const [currentStores, setStores] = useState<any>()
 
     const onFinish = (v: any) => {
-        console.log(v)
     }
     function handleChange(value: any) {
 
@@ -96,7 +95,6 @@ const SearchFields = () => {
                             <TreeSelect
                                 treeData={mockData}
                                 value={[]}
-                                onChange={(a) => console.log(a)}
                                 treeCheckable
                                 placeholder='可多选'
                                 allowClear

@@ -155,7 +155,6 @@ const StoreSelect = (props: IProps): JSX.Element => {
         let currStoreList;
         if (selectedStores.length > 10) {
             selectedStores = selectedStores.slice(0, 10);
-            console.log(selectedStores)
             message.error('最多选择十个门店！');
             // 其余的均不可选
             currStoreList = setStatus(storeList, selectedStores);

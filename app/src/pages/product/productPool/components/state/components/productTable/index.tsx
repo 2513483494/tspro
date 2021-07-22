@@ -44,14 +44,12 @@ const ProductTable = () => {
     useEffect(() => {
         const data = localStorage.getItem('products') || ''
         const allData = JSON.parse(data)
-        console.log(allData.length)
         setdata(allData)
         const index = (currPage - 1) * pagesize
         setCurrdata(dataSource.slice(index, index + pagesize))
     }, [currPage, dataSource, pagesize])
 
     const changePrice = (v: number) => {
-        console.log(v)
         setPrice(v)
     }
     const changeProductPrice = (index: number) => {

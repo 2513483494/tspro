@@ -20,7 +20,6 @@ const ChangeInfo = () => {
             addOneProduct(values)
         } else {
             const newData = [...pros.slice(0, index), values, ...pros.slice(+index + 1)]
-            console.log(newData)
             replaceProducts(newData)
             message.success('修改成功')
         }
