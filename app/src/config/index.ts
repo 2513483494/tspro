@@ -41,3 +41,11 @@ export const addOneProduct = (value: any) => {
 export const replaceProducts = (value: any) => {
     localStorage.setItem('products', JSON.stringify(value))
 }
+
+export const delProduct = (index: number) => {
+    const u = localStorage.getItem('products')
+    const datas = u ? JSON.parse(u) : []
+    datas.splice(index, 1)
+    localStorage.setItem('products', JSON.stringify(datas))
+    return datas
+}

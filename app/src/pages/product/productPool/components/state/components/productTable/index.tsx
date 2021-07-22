@@ -1,7 +1,7 @@
-import { Table, Pagination, Button, Modal, Input, InputNumber, message } from 'antd'
+import { Table, Pagination, Button, Modal, InputNumber, message } from 'antd'
 import { useState, useEffect } from 'react'
 import './index.less'
-import { addOneProduct, replaceProducts } from '@config/index'
+import { replaceProducts, delProduct } from '@config/index'
 import { useHistory } from 'react-router-dom'
 
 interface productType {
@@ -15,8 +15,12 @@ interface productType {
 
 const ProductTable = () => {
     const history = useHistory()
-    const [currPage, setcurrPage] = useState<number>()
+    const [currPage, setcurrPage] = useState<number>(1)
+    const [pagesize, setpagesize] = useState<number>(5)
+
     const [dataSource, setdata] = useState<productType[]>([])
+    const [currData, setCurrdata] = useState<productType[]>([])
+
     const [price, setPrice] = useState<number>()
     const [onChangedProductIndex, setIndex] = useState<number>(1)
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -39,9 +43,12 @@ const ProductTable = () => {
     };
     useEffect(() => {
         const data = localStorage.getItem('products') || ''
-        const data1 = JSON.parse(data)
-        setdata(data1)
-    }, [])
+        const allData = JSON.parse(data)
+        console.log(allData.length)
+        setdata(allData)
+        const index = (currPage - 1) * pagesize
+        setCurrdata(dataSource.slice(index, index + pagesize))
+    }, [currPage, dataSource, pagesize])
 
     const changePrice = (v: number) => {
         console.log(v)
@@ -60,7 +67,6 @@ const ProductTable = () => {
         message.success('修改成功')
     }
     const changeInfo = (record: any, index: number) => {
-        console.log(record)
         localStorage.setItem('index', index.toString())
         history.push('/admin/productpool/changeinfo')
     }
@@ -107,8 +113,7 @@ const ProductTable = () => {
             render: (v: any, record: any, index: any) => (
                 <>
                     <Button type='link' onClick={() => changeInfo(record, index)}>修改</Button>
-                    <Button type='link'>详情</Button>
-                    <Button type='link'>删除</Button>
+                    <Button type='link' onClick={() => delTheProduct(index)}>删除</Button>
                 </>
             )
         },
@@ -119,6 +124,7 @@ const ProductTable = () => {
     }
     const changesize = (p: number, s: number) => {
         setcurrPage(p)
+        setpagesize(s)
     }
     const rowSelection = {
         onChange: (selectedRowKeys: any, selectedRows: any) => {
@@ -131,17 +137,39 @@ const ProductTable = () => {
             console.log(selected, selectedRows, changeRows);
         },
     };
+    const delTheProduct = (index: number) => {
+        setdata(delProduct(index))
+    }
+    const pageSizes = ['5', '10', '15']
     return (
         <>
-            <Table dataSource={dataSource} columns={columns} bordered pagination={false} rowSelection={{ ...rowSelection }} />
+            <Button type='primary' onClick={() => changeInfo({}, -1)} style={{ marginBottom: 20 }}>添加商品</Button>
+            <Table
+                dataSource={currData}
+                columns={columns}
+                bordered
+                pagination={false}
+                rowSelection={{ ...rowSelection }}
+                onRow={record => {
+                    return {
+                        onClick: event => { }, // 点击行
+                        onDoubleClick: event => { },
+                        onContextMenu: event => { },
+                        onMouseEnter: event => { }, // 鼠标移入行
+                        onMouseLeave: event => { },
+                    };
+                }}
+            />
             <div className='pagination'>
                 <Pagination
                     size="small"
-                    total={50}
+                    total={dataSource.length}
                     showSizeChanger
                     current={currPage}
                     onChange={changepage}
                     onShowSizeChange={changesize}
+                    pageSizeOptions={pageSizes}
+                    defaultPageSize={5}
                 />
             </div>
             <Modal title="改价" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>

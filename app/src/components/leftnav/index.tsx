@@ -37,6 +37,4 @@ const Leftnav = (): JSX.Element => (
     </Menu>
 )
 
-
-
 export default Leftnav
