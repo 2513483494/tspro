@@ -9,7 +9,7 @@ interface productType {
     name: string;
     price: number;
     brand: string;
-    status: boolean;
+    status: number;
     storeCount: number;
 }
 
@@ -20,18 +20,34 @@ const ProductTable = () => {
 
     const [dataSource, setdata] = useState<productType[]>([])
     const [currData, setCurrdata] = useState<productType[]>([])
+    const [findData, setFinddata] = useState<productType[]>([])
+    const [dataType, setDatetype] = useState(true)
+
+    const [selectedProducts, setSelectedProducts] = useState<string[]>([])
 
     const [price, setPrice] = useState<number>()
     const [onChangedProductIndex, setIndex] = useState<number>(1)
     const [isModalVisible, setIsModalVisible] = useState(false);
+    //const [findPros, setIsModalVisible] = useState(false);
 
     const showModal = () => {
         setIsModalVisible(true);
     };
 
     const handleOk = () => {
-        dataSource[onChangedProductIndex].price = price || 1
-        const newData = [...dataSource.slice(0, onChangedProductIndex), dataSource[onChangedProductIndex], ...dataSource.slice(onChangedProductIndex + 1)]
+        let newData = [...dataSource]
+        if (selectedProducts.length) {
+            selectedProducts.forEach((p: any) => {
+                newData.forEach((d: any) => {
+                    if (d.key === p) {
+                        d.price = price
+                    }
+                })
+            })
+        } else {
+            dataSource[onChangedProductIndex].price = price || 1
+            newData = [...dataSource.slice(0, onChangedProductIndex), dataSource[onChangedProductIndex], ...dataSource.slice(onChangedProductIndex + 1)]
+        }
         replaceProducts(newData)
         setdata(newData)
         setIsModalVisible(false);
@@ -42,13 +58,20 @@ const ProductTable = () => {
         setIsModalVisible(false);
     };
     useEffect(() => {
-        const data = localStorage.getItem('products') || ''
-        const allData = JSON.parse(data)
-        setdata(allData)
         const index = (currPage - 1) * pagesize
         setCurrdata(dataSource.slice(index, index + pagesize))
     }, [currPage, dataSource, pagesize])
-
+    useEffect(() => {
+        const find = localStorage.getItem('find')
+        const datas = find ? JSON.parse(find) : []
+        setDatetype(!find)
+        setFinddata(datas)
+    }, [])
+    useEffect(() => {
+        const data = localStorage.getItem('products') || ''
+        const allData = JSON.parse(data)
+        setdata(allData)
+    }, [])
     const changePrice = (v: number) => {
         setPrice(v)
     }
@@ -57,7 +80,7 @@ const ProductTable = () => {
         showModal()
     }
     const changeStatus = (index: number) => {
-        dataSource[index].status = !dataSource[index].status
+        dataSource[index].status = -dataSource[index].status
         const newData = [...dataSource.slice(0, index), dataSource[index], ...dataSource.slice(index + 1)]
         replaceProducts(newData)
         setdata(newData)
@@ -95,8 +118,9 @@ const ProductTable = () => {
             dataIndex: 'status',
             key: 'status',
             render: (v: any, record: any, index: any) => {
+                console.log('v', v)
                 return (
-                    <Button type={v ? 'ghost' : 'primary'} onClick={() => changeStatus(index)}>{v ? '在售' : '下架'}</Button>
+                    <Button type={v===1 ? 'ghost' : 'primary'} onClick={() => changeStatus(index)}>{v===1 ? '在售' : '下架'}</Button>
                 )
             }
         },
@@ -126,31 +150,48 @@ const ProductTable = () => {
     }
     const rowSelection = {
         onChange: (selectedRowKeys: any, selectedRows: any) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            //console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            setSelectedProducts(selectedRowKeys)
         },
-        onSelect: (record: any, selected: any, selectedRows: any) => {
-            console.log(record, selected, selectedRows);
-        },
-        onSelectAll: (selected: any, selectedRows: any, changeRows: any) => {
-            console.log(selected, selectedRows, changeRows);
-        },
+        selectedRowKeys: selectedProducts
+        // onSelect: (record: any, selected: any, selectedRows: any) => {
+        //     console.log(record, selected, selectedRows);
+        // },
+        // onSelectAll: (selected: any, selectedRows: any, changeRows: any) => {
+        //     console.log(selected, selectedRows, changeRows);
+        // },
     };
     const delTheProduct = (index: number) => {
         setdata(delProduct(index))
+    }
+    const patchChangePrice = () => {
+        //selectedProducts dataSource
+        setIsModalVisible(true)
     }
     const pageSizes = ['5', '10', '15']
     return (
         <>
             <Button type='primary' onClick={() => changeInfo({}, -1)} style={{ marginBottom: 20 }}>添加商品</Button>
+            <Button type='primary' disabled={selectedProducts.length ? false : true} onClick={() => patchChangePrice()} style={{ marginLeft: 20 }}>批量改价</Button>
+
             <Table
-                dataSource={currData}
+                dataSource={dataType ? currData : findData}
                 columns={columns}
                 bordered
                 pagination={false}
                 rowSelection={{ ...rowSelection }}
                 onRow={record => {
                     return {
-                        onClick: event => { }, // 点击行
+                        onClick: event => {
+                            const i = selectedProducts.indexOf(record.key.toString())
+                            console.log(i)
+                            if (i === -1) {
+                                setSelectedProducts([...selectedProducts, record.key.toString()])
+                            } else {
+                                selectedProducts.splice(i, 1)
+                                setSelectedProducts([...selectedProducts])
+                            }
+                        },
                         onDoubleClick: event => { },
                         onContextMenu: event => { },
                         onMouseEnter: event => { }, // 鼠标移入行
@@ -161,7 +202,7 @@ const ProductTable = () => {
             <div className='pagination'>
                 <Pagination
                     size="small"
-                    total={dataSource.length}
+                    total={dataType ? dataSource.length : findData.length}
                     showSizeChanger
                     current={currPage}
                     onChange={changepage}

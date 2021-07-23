@@ -1,27 +1,60 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import StoreSelect from '@components/storeList'
 import './index.less'
 import { Form, Row, Col, Input, Button, Select, Checkbox, TreeSelect } from 'antd'
-import { addOneProduct } from '@config/index'
+import { getProducts, useUpdate } from '@config/index'
+
 
 const { Option } = Select
 
 const SearchFields = () => {
     const [others, setothers] = useState()
     const [form] = Form.useForm()
+    const update = useUpdate()
 
     //组件返回的已选ids
     const [storeIds, setStoreids] = useState()
     //url回填的ids
     const [currentStores, setStores] = useState<any>()
+    const [finPros, setFindpros] = useState()
+    const [products, setProducts] = useState(getProducts())
+    const [ub, setub] = useState()
+    useEffect(() => {
+        const pros = getProducts()
+        setProducts(pros)
+    }, [])
+    useEffect(() => {
+        const brands: any = []
+        products.forEach((p: any) => {
+            if (brands.indexOf(p.brand) === -1) {
+                brands.push(p.brand)
+            }
+        })
+        const ub = brands.map((b: any, index: any) => ({
+            title: b,
+            value: b,
+            key: index,
+        }))
+        setub(ub)
+    }, [products])
 
     const onFinish = (v: any) => {
+        const { name, brand, others } = v
+        const finds = products.filter((p: any) => {
+            let c1 = name || p.name
+            let c2 = others ? (others.indexOf('onsale') === -1 ? p.status : 1) : p.status
+            let c3 = brand || [p.brand]
+            return c1 === p.name && c2 === p.status && c3.indexOf(p.brand) !== -1
+        })
+        setFindpros(finds)
+        localStorage.setItem('find', JSON.stringify(finds))
     }
     function handleChange(value: any) {
 
     }
     const reset = () => {
         form.resetFields()
+        localStorage.removeItem("find");
         setStores([])
     }
     const plainOptions = [
@@ -37,25 +70,9 @@ const SearchFields = () => {
     const changeCheckbox = (v: any) => {
         setothers(v)
     }
-    const mockData = [
-        {
-            title: '李宁',
-            value: 'ln',
-            key: 'ln',
-        },
-        {
-            title: '耐克',
-            value: 'nk',
-            key: 'nk',
-        },
-        {
-            title: '阿迪',
-            value: 'ad',
-            key: 'ad',
-        },
-    ]
+
     return (
-        <div style={{marginBottom: 20}}>
+        <div style={{ marginBottom: 20 }}>
             <h1>全国商品池</h1>
             <Form
                 form={form}
@@ -93,7 +110,7 @@ const SearchFields = () => {
                             name='brand'
                         >
                             <TreeSelect
-                                treeData={mockData}
+                                treeData={ub}
                                 value={[]}
                                 treeCheckable
                                 placeholder='可多选'

@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 export const menu = [
     {
         title: '首页',
@@ -10,7 +12,7 @@ export const menu = [
         children: [
             {
                 title: '商品池',
-                key: 'productPool',
+                key: 'productpool',
                 path: '/admin/productpool'
             },
             {
@@ -48,4 +50,19 @@ export const delProduct = (index: number) => {
     datas.splice(index, 1)
     localStorage.setItem('products', JSON.stringify(datas))
     return datas
+}
+
+export const getProducts = () => {
+    const u = localStorage.getItem('products')
+    const datas = u ? JSON.parse(u) : []
+    return datas
+}
+
+export const useUpdate = () => {
+    const [, setFlag] = useState<number>()
+    const update = () => {
+        setFlag(Date.now())
+    }
+
+    return update
 }

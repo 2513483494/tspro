@@ -73,9 +73,9 @@ const ChangeInfo = () => {
                     </Col>
                     <Col span={16}>
                         <Item label='状态' name='status'>
-                            <Select defaultValue="true" onChange={handleChange}>
-                                <Option value="true">已上架</Option>
-                                <Option value="false">已下架</Option>
+                            <Select defaultValue={1} onChange={handleChange}>
+                                <Option value={1}>已上架</Option>
+                                <Option value={-1}>已下架</Option>
                             </Select>
                         </Item>
                     </Col>
