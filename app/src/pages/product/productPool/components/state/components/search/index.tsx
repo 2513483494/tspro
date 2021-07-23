@@ -2,21 +2,18 @@ import { useState, useEffect } from 'react'
 import StoreSelect from '@components/storeList'
 import './index.less'
 import { Form, Row, Col, Input, Button, Select, Checkbox, TreeSelect } from 'antd'
-import { getProducts, useUpdate } from '@config/index'
-
+import { getProducts } from '@config/index'
+import { debounce } from 'lodash'
 
 const { Option } = Select
 
-const SearchFields = () => {
-    const [others, setothers] = useState()
+const SearchFields = (props: any) => {
     const [form] = Form.useForm()
-    const update = useUpdate()
 
     //组件返回的已选ids
-    const [storeIds, setStoreids] = useState()
+    const [, setStoreids] = useState()
     //url回填的ids
     const [currentStores, setStores] = useState<any>()
-    const [finPros, setFindpros] = useState()
     const [products, setProducts] = useState(getProducts())
     const [ub, setub] = useState()
     useEffect(() => {
@@ -44,9 +41,9 @@ const SearchFields = () => {
             let c1 = name || p.name
             let c2 = others ? (others.indexOf('onsale') === -1 ? p.status : 1) : p.status
             let c3 = brand || [p.brand]
-            return c1 === p.name && c2 === p.status && c3.indexOf(p.brand) !== -1
+            return p.name.indexOf(c1) !== -1 && c2 === p.status && c3.indexOf(p.brand) !== -1
         })
-        setFindpros(finds)
+        props.onChange && props.onChange(finds)
         localStorage.setItem('find', JSON.stringify(finds))
     }
     function handleChange(value: any) {
@@ -68,8 +65,22 @@ const SearchFields = () => {
         },
     ]
     const changeCheckbox = (v: any) => {
-        setothers(v)
+        console.log(v)
     }
+    const debounceSearchName = (name: string) => {
+        var re = /[a-zA-Z]/
+        console.log(name)
+        console.log('debounce')
+        if (!re.test(name)) {
+            const finds = products.filter((p: any) => {
+                return p.name.includes(name)
+            })
+            props.onChange && props.onChange(finds)
+        }
+    }
+    const changeName = debounce((e) => {
+        debounceSearchName(e.target.value)
+    }, 300)
 
     return (
         <div style={{ marginBottom: 20 }}>
@@ -90,7 +101,7 @@ const SearchFields = () => {
                             label='商品名称'
                             name='name'
                         >
-                            <Input placeholder='可输入商品名称查询' />
+                            <Input placeholder='可输入商品名称查询' onChange={changeName} />
                         </Form.Item>
                     </Col>
                     <Col span={8} pull={1}>
@@ -145,7 +156,10 @@ const SearchFields = () => {
                         </Button>
                         <Button
                             style={{ margin: '0 8px' }}
-                            onClick={() => reset()}
+                            onClick={() => {
+                                props.onChange && props.onChange()
+                                reset()
+                            }}
                         >
                             清空
                         </Button>

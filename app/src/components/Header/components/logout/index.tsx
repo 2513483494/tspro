@@ -11,7 +11,6 @@ const Logout = () => {
         history.push('/login')
     }
     const delinfo = () => {
-        //localStorage.clear()
         const u = localStorage.getItem("users")
         const users = u ? JSON.parse(u) : []
         for (let i in users) {

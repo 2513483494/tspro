@@ -1,11 +1,17 @@
 import SearchFields from './components/search'
 import ProductTable from './components/productTable'
+import { useState } from 'react'
 
 const Stateproduct = () => {
+    const [finds, setFinds] = useState()
+    const onChange = (f: any) => {
+        console.log(f)
+        setFinds(f)
+    }
     return (
         <div>
-            <SearchFields />
-            <ProductTable />
+            <SearchFields onChange={onChange} />
+            <ProductTable finds={finds} />
         </div>
     )
 }
