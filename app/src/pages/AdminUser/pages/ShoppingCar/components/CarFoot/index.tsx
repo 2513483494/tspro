@@ -1,4 +1,5 @@
 import { Checkbox, Button, Popover } from 'antd';
+import { useState, useEffect } from 'react'
 import styles from './style.module.less'
 
 function onChange(e: any) {
@@ -10,6 +11,10 @@ const CarFoot = () => {
     const content = (
         <div>1</div>
     )
+    const [allPrice, setAllprice] = useState(0)
+    const countBill = () => {
+        
+    }
     return (
         <div className={styles.carfoot}>
             <Checkbox onChange={onChange}>全选</Checkbox>
@@ -19,7 +24,7 @@ const CarFoot = () => {
                 <Button type="primary">Hover me</Button>
             </Popover>
             <span>总价：{allPrice}</span>
-            <Button type='primary'>结算</Button>
+            <Button type='primary' onClick={countBill}>结算</Button>
         </div>
 
     )
