@@ -65,12 +65,9 @@ const SearchFields = (props: any) => {
         },
     ]
     const changeCheckbox = (v: any) => {
-        console.log(v)
     }
     const debounceSearchName = (name: string) => {
         var re = /[a-zA-Z]/
-        console.log(name)
-        console.log('debounce')
         if (!re.test(name)) {
             const finds = products.filter((p: any) => {
                 return p.name.includes(name)

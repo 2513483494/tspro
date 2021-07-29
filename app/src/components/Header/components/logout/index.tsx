@@ -8,7 +8,7 @@ const Logout = () => {
     const quit = () => {
         localStorage.setItem('isLogedIn', 'false')
         localStorage.setItem('currentUser', '')
-        history.push('/login')
+        history.replace('/login')
     }
     const delinfo = () => {
         const u = localStorage.getItem("users")
@@ -22,7 +22,7 @@ const Logout = () => {
         }
         localStorage.setItem('currentUser', '')
         localStorage.setItem('isLogedIn', 'false')
-        history.push('/login')
+        history.replace('/login')
     }
     const menu = (
         <Menu>

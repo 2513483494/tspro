@@ -4,6 +4,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { lazy, Suspense, useState, useEffect } from 'react'
 import { Redirect, useHistory } from 'react-router-dom'
 import Qrcode from '@components/qrCode/idnex'
+import styles from './style.module.less'
 
 const Bear = lazy(() => import('./components/bear'));
 const Loginheader = lazy(() => import('./components/header'));
@@ -18,21 +19,28 @@ const Login = (): JSX.Element => {
     const [form] = Form.useForm()
     const [mainform] = Form.useForm()
     const history = useHistory()
-    const [loginType, setLoginType] = useState(true)
+    const [loginType, setLoginType] = useState(true)//二维码登录，账号密码登录
     const [users, setusers] = useState<any>()
+    const [loginModel, setModel] = useState(true)//true商家版，false用户版
     useEffect(() => {
         const u = localStorage.getItem("users")
         const users = u ? JSON.parse(u) : []
         setusers(users)
     }, [])
-
+    useEffect(() => {
+        const info = loginModel ? '当前为商家版登录模式' : '当前为用户版登录模式'
+        message.info(info)
+    }, [loginModel])
     const onFinish = (values: userInfo) => {
         for (let i in users) {
             if (users[i].name === values.username && users[i].psw === values.password) {
                 message.success('登陆成功！')
+                const login = loginModel ? '1' : '0'
                 localStorage.setItem('isLogedIn', 'true')
+                localStorage.setItem('loginModel', login)//登录模式 1--商家版，0--用户版
                 localStorage.setItem('currentUser', values.username)
-                history.push('/admin')
+                const goto = loginModel ? '/admin' : '/adminuser'
+                history.push(goto)
             }
         }
         if (localStorage.getItem('isLogedIn') !== 'true') {
@@ -49,7 +57,12 @@ const Login = (): JSX.Element => {
     }
     const [isModalVisible, setIsModalVisible] = useState(false)
     if (localStorage.getItem('isLogedIn') === 'true') {
-        return <Redirect to='/admin'></Redirect>
+        console.log()
+        if (localStorage.getItem('loginModel') === '1') {
+            return <Redirect to='/admin'></Redirect>
+        } else {
+            return <Redirect to='/adminuser'></Redirect>
+        }
     }
     const handleOk = () => {
         setIsModalVisible(false)
@@ -76,11 +89,12 @@ const Login = (): JSX.Element => {
     }
 
     return (
-        <div className='loginbody'>
+        <div className={styles.loginbody}>
             <div>
                 <Loginheader />
+                <Button type='primary' onClick={() => setModel(!loginModel)}>{loginModel ? '当前为商家登录模式' : '当前为用户登录模式'}</Button>
             </div>
-            <div className='loginform'>
+            <div className={styles.loginform}>
                 <Form
                     name="basic"
                     labelCol={{ span: 8 }}

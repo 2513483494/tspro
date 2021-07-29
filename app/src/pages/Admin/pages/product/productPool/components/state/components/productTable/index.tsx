@@ -26,6 +26,9 @@ const ProductTable = (props: any) => {
     const [selectedProducts, setSelectedProducts] = useState<string[]>([])
 
     const [price, setPrice] = useState<number>()
+    const [currprice, setCurrprice] = useState<number>(1)
+    const [title, setTitle] = useState<string>()
+
     const [onChangedProductIndex, setIndex] = useState<number>(1)
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -78,10 +81,14 @@ const ProductTable = (props: any) => {
     const changePrice = (v: number) => {
         setPrice(v)
     }
-    const changeProductPrice = (index: number) => {
+    useEffect(() => {
+        setTitle(`原价为${currprice},请输入修改后的价格：`)
+
+    }, [currprice])
+    const changeProductPrice = (v: any, index: number) => {
+        setCurrprice(v)
         setTimeout(() => {
             selectedProducts.splice(selectedProducts.length - 1, 1)
-            console.log('gaijia', selectedProducts)
             setSelectedProducts([...selectedProducts])
         }, 0);
         setIndex(index)
@@ -90,7 +97,6 @@ const ProductTable = (props: any) => {
     const changeStatus = (index: number) => {
         setTimeout(() => {
             selectedProducts.splice(selectedProducts.length - 1, 1)
-            console.log('gaijia', selectedProducts)
             setSelectedProducts([...selectedProducts])
         }, 0);
         dataSource[index].status = -dataSource[index].status
@@ -117,7 +123,7 @@ const ProductTable = (props: any) => {
             render: (v: any, record: any, index: any) => (
                 <>
                     <span>{v}</span>
-                    <Button type='link' onClick={() => changeProductPrice(index)}>改价</Button>
+                    <Button type='link' onClick={() => changeProductPrice(v, index)}>改价</Button>
                 </>
             )
         },
@@ -173,6 +179,7 @@ const ProductTable = (props: any) => {
         setIsModalVisible(true)
     }
     const pageSizes = ['5', '10', '15']
+
     return (
         <>
             <Button type='primary' onClick={() => changeInfo({}, -1)} style={{ marginBottom: 20 }}>添加商品</Button>
@@ -187,7 +194,6 @@ const ProductTable = (props: any) => {
                 onRow={record => {
                     return {
                         onClick: event => {
-                            console.log('onrow')
                             const i = selectedProducts.indexOf(record.key.toString())
                             if (i === -1) {
                                 setSelectedProducts([...selectedProducts, record.key.toString()])
@@ -215,13 +221,15 @@ const ProductTable = (props: any) => {
                     defaultPageSize={5}
                 />
             </div>
-            <Modal title="改价" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title={title} visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                修改为：
                 <InputNumber
                     min={1}
                     max={100}
-                    defaultValue={0}
+                    value={currprice}
                     onChange={changePrice}
                 />
+                元
             </Modal>
         </>
     )

@@ -1,4 +1,4 @@
-import { Form, PageHeader, Input, Button, message, InputNumber, Row, Col, Select } from 'antd'
+import { Form, PageHeader, Input, Button, message, InputNumber, Row, Col, Select, Popconfirm } from 'antd'
 import { useHistory } from 'react-router-dom'
 import { useEffect } from 'react'
 import './index.less'
@@ -34,6 +34,13 @@ const ChangeInfo = () => {
             key, name, price, brand, storeCount, status: status ? '已上架' : '已下架'
         })
     }, [brand, form, key, name, price, status, storeCount])
+    function confirm(e: any) {
+        submit()
+    }
+
+    function cancel(e: any) {
+        
+    }
     return (
         <div className='productInfo'>
             <PageHeader
@@ -81,7 +88,16 @@ const ChangeInfo = () => {
                     </Col>
                     <Col span={16}>
                         <Item name='name'>
-                            <Button type='primary' htmlType='submit'>确定</Button>
+                            <Popconfirm
+                                title="确认修改吗?"
+                                onConfirm={confirm}
+                                onCancel={cancel}
+                                okText="确认"
+                                cancelText="取消"
+                                placement="bottom"
+                            >
+                                <Button type='primary' htmlType='submit'>确定</Button>
+                            </Popconfirm>
                         </Item>
                     </Col>
                 </Row>
