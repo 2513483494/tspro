@@ -8,7 +8,9 @@ const AdminUser = (): JSX.Element => {
         <>
             <FunctionBar />
             <UserhomeHeader />
-            <PicScroll />
+            <div className={styles.userhomebody}>
+                <PicScroll />
+            </div>
         </>
     )
 }

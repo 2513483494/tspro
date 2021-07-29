@@ -1,8 +1,30 @@
-.picscroll{
-    display: flex;
-    justify-content: center;
-    img{
-        width: 100px;
-        height: 100px;
+.picrow {
+  .links {
+    width: 300px;
+    background-color: #fff;
+    height: 500px;
+    div {
+      &:hover {
+        background-color: cyan;
+      }
     }
+  }
+  .userinfo {
+    width: 300px;
+    background-color: #fff;
+    height: 500px;
+  }
+  width: 100%;
+  display: flex;
+  .pics {
+    width: 500px;
+    margin: 0 auto;
+    img {
+      width: 500px;
+      height: 500px;
+      position: relative;
+      right: 15px;
+      bottom: 5px;
+    }
+  }
 }
