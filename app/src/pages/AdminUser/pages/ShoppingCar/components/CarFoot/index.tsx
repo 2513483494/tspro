@@ -6,6 +6,7 @@ function onChange(e: any) {
 }
 
 const CarFoot = () => {
+    //选中商品信息
     const content = (
         <div>1</div>
     )
@@ -17,6 +18,8 @@ const CarFoot = () => {
             <Popover content={content} title="Title">
                 <Button type="primary">Hover me</Button>
             </Popover>
+            <span>总价：{allPrice}</span>
+            <Button type='primary'>结算</Button>
         </div>
 
     )
