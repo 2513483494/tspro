@@ -1,3 +1,4 @@
+import { includes } from 'lodash'
 import { useState } from 'react'
 
 export const menu = [
@@ -72,4 +73,26 @@ export const provinces = [
     '江西', '山东', '河南', '湖北', '湖南', '广东', '海南', '四川', '贵州',
     '云南', '陕西', '甘肃', '青海', '黑龙江'
 ]
+
+export const getBrands = () => {
+    const u = localStorage.getItem('products')
+    const datas = u ? JSON.parse(u) : []
+    const brands: string[] = []
+    datas.forEach((data: any) => {
+        if(!brands.includes(data.brnd)){
+            brands.push(data.brnd)
+        }
+    })
+    return brands
+}
+
+
+export const getBrandProducts = (brand: string) => {
+    const u = localStorage.getItem('products')
+    const datas = u ? JSON.parse(u) : []
+    const brandProduct = datas.filter((data: any) => {
+        return data.name === brand
+    })
+    return brandProduct
+}
 
