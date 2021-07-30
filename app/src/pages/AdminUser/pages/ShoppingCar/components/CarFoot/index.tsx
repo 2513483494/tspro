@@ -13,8 +13,11 @@ const CarFoot = () => {
     )
     const [allPrice, setAllprice] = useState(0)
     const countBill = () => {
-        
+
     }
+    useEffect(() => {
+
+    })
     return (
         <div className={styles.carfoot}>
             <Checkbox onChange={onChange}>全选</Checkbox>

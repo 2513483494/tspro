@@ -6,7 +6,6 @@ import styles from './style.module.less'
 import { Carousel, Button } from 'antd';
 import Userinfo from './Userinfo'
 
-
 const PicScroll = () => {
     return (
         <div className={styles.picrow}>
