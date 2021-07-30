@@ -79,8 +79,8 @@ export const getBrands = () => {
     const datas = u ? JSON.parse(u) : []
     const brands: string[] = []
     datas.forEach((data: any) => {
-        if(!brands.includes(data.brnd)){
-            brands.push(data.brnd)
+        if(!brands.includes(data.brand)){
+            brands.push(data.brand)
         }
     })
     return brands
@@ -91,7 +91,7 @@ export const getBrandProducts = (brand: string) => {
     const u = localStorage.getItem('products')
     const datas = u ? JSON.parse(u) : []
     const brandProduct = datas.filter((data: any) => {
-        return data.name === brand
+        return data.brand === brand
     })
     return brandProduct
 }

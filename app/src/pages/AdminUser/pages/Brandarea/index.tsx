@@ -1,37 +1,42 @@
 import styles from './style.module.less'
-import { Tabs } from 'antd'
+import { Button, Tabs } from 'antd'
 import { getBrandProducts, getBrands } from '@config/index'
+import { useState, useEffect } from 'react';
 
 const { TabPane } = Tabs;
 
 const Brandarea = () => {
+    const [currTab, setCurrtab] = useState()
+    const [currProducts, setCurrProducts] = useState([])
+    useEffect(() => {
+        const pros = getBrandProducts(currTab || '娃哈哈')
+        setCurrProducts(pros)
+    }, [currTab])
     function callback(key: any) {
-        console.log(key);
+        setCurrtab(key)
     }
     const brands = getBrands()
-    console.log('brands', brands)
     return (
-        <Tabs defaultActiveKey="1" onChange={callback}>
-            {brands.map((brand) => {
-                const brandProducts = getBrandProducts(brand)
+        <>
+            <Tabs defaultActiveKey="百事" onChange={callback}>
+                {brands.map((brand) => {
+                    return (
+                        <TabPane tab={brand} key={brand}>
+                        </TabPane>
+                    )
+                })}
+            </Tabs>
+            {currProducts.map((product: any) => {
                 return (
-                    <TabPane tab={brand} key={brand}>
-                        <div className={styles.tabbody}>
-                            {brandProducts.map((product: any) => {
-                                return (
-                                    <div className={styles.tabproduct}>
-                                        {product.name}
-                                        {product.brand}
-                                        {product.price}
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    </TabPane>
+                    <div>
+                        <div>{product.name}</div>
+                        <div>{product.brand}</div>
+                        <div>{product.price}</div>
+                        <Button>购买</Button>
+                    </div>
                 )
             })}
-
-        </Tabs>
+        </>
     )
 }
 
