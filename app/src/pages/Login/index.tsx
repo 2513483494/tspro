@@ -1,5 +1,4 @@
 import { Form, Input, Button, Modal, message } from 'antd'
-import './index.less'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { lazy, Suspense, useState, useEffect } from 'react'
 import { Redirect, useHistory } from 'react-router-dom'
@@ -91,10 +90,10 @@ const Login = (): JSX.Element => {
     return (
         <div className={styles.loginbody}>
             <div>
-                <Loginheader />
                 <Button type='primary' onClick={() => setModel(!loginModel)}>{loginModel ? '当前为商家登录模式' : '当前为用户登录模式'}</Button>
             </div>
             <div className={styles.loginform}>
+                <Loginheader />
                 <Form
                     name="basic"
                     labelCol={{ span: 8 }}

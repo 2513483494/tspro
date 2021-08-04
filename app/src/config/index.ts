@@ -55,7 +55,9 @@ export const delProduct = (index: number) => {
 
 export const getProducts = () => {
     const u = localStorage.getItem('products')
+    console.log('getpro', u)
     const datas = u ? JSON.parse(u) : []
+    console.log('datas', datas)
     return datas
 }
 

@@ -9,15 +9,19 @@ const { Option } = Select
 
 const SearchFields = (props: any) => {
     const [form] = Form.useForm()
-
+    
+    
     //组件返回的已选ids
     const [, setStoreids] = useState()
     //url回填的ids
     const [currentStores, setStores] = useState<any>()
-    const [products, setProducts] = useState(getProducts())
+    const [products, setProducts] = useState([])
+    
     const [ub, setub] = useState()
     useEffect(() => {
+        
         const pros = getProducts()
+        console.log('ok');
         setProducts(pros)
     }, [])
     useEffect(() => {

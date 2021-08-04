@@ -36,7 +36,7 @@ const ProductTable = (props: any) => {
         setIsModalVisible(true);
     };
     const { finds } = props
-    const [find, setFind] = useState(finds)
+    const [find, setFind] = useState(finds || [])
     useEffect(() => {
         if (finds) {
             setFind(finds)
@@ -76,7 +76,7 @@ const ProductTable = (props: any) => {
     useEffect(() => {
         const data = localStorage.getItem('products') || ''
         const allData = JSON.parse(data)
-        setdata(allData)
+        setdata(allData || [])
     }, [])
     const changePrice = (v: number) => {
         setPrice(v)

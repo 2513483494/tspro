@@ -1,0 +1,13 @@
+.loginmainheader .loginheader {
+  position: relative;
+  left: 25%;
+  top: -20px;
+  display: flex;
+  color: cornsilk;
+  font-size: large;
+  font-weight: bold;
+  width: 100px;
+}
+.loginmainheader .loginheader img {
+  width: 30px;
+}
