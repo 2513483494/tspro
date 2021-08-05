@@ -81,7 +81,7 @@ export const getBrands = () => {
     const datas = u ? JSON.parse(u) : []
     const brands: string[] = []
     datas.forEach((data: any) => {
-        if(!brands.includes(data.brand)){
+        if (!brands.includes(data.brand)) {
             brands.push(data.brand)
         }
     })
@@ -98,3 +98,25 @@ export const getBrandProducts = (brand: string) => {
     return brandProduct
 }
 
+export const addproductToshopcar = (product: any) => {
+    const u = localStorage.getItem('shoppingcarProducts')
+    const datas = u ? JSON.parse(u) : []
+    const t = datas.filter((data: any) => data.name === product.name)
+    if (t.length===0) {
+        product.buyCount = 1
+        datas.push(product)
+    } else {
+        for (let i in datas) {
+            if (datas[i].name === product.name) {
+                datas[i].buyCount += 1
+            }
+        }
+    }
+    localStorage.setItem('shoppingcarProducts', JSON.stringify(datas))
+}
+
+export const getCarProducts = () => {
+    const u = localStorage.getItem('shoppingcarProducts')
+    const datas = u ? JSON.parse(u) : []
+    return datas
+}

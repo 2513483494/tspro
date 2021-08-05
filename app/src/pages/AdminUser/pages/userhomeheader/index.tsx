@@ -5,6 +5,8 @@ import styles from './style.module.less'
 import QRCode from 'qrcode.react'
 import Count from './components/Count/Count'
 import { useHistory } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { getCarProducts } from '@config/index'
 
 const { Search } = Input
 const onSearch = (value: any) => console.log(value)
@@ -17,7 +19,13 @@ const suffix = (
     />
 )
 
-const Userhome = () => {
+const Userhome = (props: any) => {
+    const [buyProducts, setBuypros] = useState()
+    useEffect(() => {
+        const pros = getCarProducts()
+        setBuypros(pros.length)
+    }, [])
+    const { carPros } = props
     const history = useHistory()
     return (
         <>
@@ -32,7 +40,7 @@ const Userhome = () => {
                             onSearch={onSearch}
                             style={{ width: 500 }}
                         />
-                        <Button onClick={() => history.replace('/adminuser/shoppingcar')}><ShoppingCartOutlined /><Count count='3' />我的购物车</Button>
+                        <Button onClick={() => history.replace('/adminuser/shoppingcar')}><ShoppingCartOutlined /><Count count={carPros.length || buyProducts} />我的购物车</Button>
                     </Space>
                 </div>
                 <QRCode
