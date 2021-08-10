@@ -1,4 +1,3 @@
-import { includes } from 'lodash'
 import { useState } from 'react'
 
 export const menu = [
@@ -119,4 +118,8 @@ export const getCarProducts = () => {
     const u = localStorage.getItem('shoppingcarProducts')
     const datas = u ? JSON.parse(u) : []
     return datas
+}
+
+export const replaceCarProducts = (value: any) => {
+    localStorage.setItem('shoppingcarProducts', JSON.stringify(value))
 }

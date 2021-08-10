@@ -1,6 +1,6 @@
 import styles from './style.module.less'
 import { Button, Tabs } from 'antd'
-import { addproductToshopcar, getBrandProducts, getBrands } from '@config/index'
+import { getBrandProducts, getBrands } from '@config/index'
 import { useState, useEffect } from 'react';
 import p1 from './imgs/1.webp'
 
@@ -34,7 +34,7 @@ const Brandarea = (props: any) => {
                 {currProducts.map((product: any) => {
                     return (
                         <div className={styles.product}>
-                            <img src={p1} />
+                            <img src={p1} alt='1'/>
                             <div>{product.name}</div>
                             <div>{product.price}￥</div>
                             <Button type='primary' onClick={() => addToShopcar(product)}>购买</Button>

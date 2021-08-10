@@ -10,7 +10,13 @@ import { addproductToshopcar, getCarProducts } from '@config/index'
 const AdminUser = (): JSX.Element => {
     const [carPros, setCarpros] = useState([])
     const getCarPros = (product: any) => {
-        addproductToshopcar(product)
+        const tp = {
+            key: product.key,
+            name: product.name,
+            price: product.price,
+            buyCount: product.buyCount
+        }
+        addproductToshopcar(tp)
         const p = getCarProducts()
         setCarpros(p)
     }

@@ -1,10 +1,8 @@
-import { Table, InputNumber, Button } from 'antd'
-import { getCarProducts } from '@config/index'
-import { useState } from 'react'
+import { Table, InputNumber, Button, message } from 'antd'
+import { getCarProducts, replaceCarProducts } from '@config/index'
 
-const Products = () => {
+const Products = (props: any) => {
     const carPros = getCarProducts()
-    const [price, setPrice] = useState()
     const datas = carPros.map((p: any) => {
         return {
             key: p.key,
@@ -13,10 +11,7 @@ const Products = () => {
             buyCount: p.buyCount,
         }
     })
-    const changePrice = (v: any) => {
-        console.log(v)
-        setPrice(v)
-    }
+
     const procol = [
         {
             title: '商品名称',
@@ -34,7 +29,28 @@ const Products = () => {
             key: 'buyCount',
             render: (text: any, record: any) => {
                 return (
-                    < InputNumber value={text} onChange={changePrice} />
+                    < InputNumber
+                        defaultValue={text}
+                        onChange={(v: any) => {
+                            record.buyCount = v
+                            const pros = getCarProducts()
+                            let newPros: any = []
+                            for (let i in pros) {
+                                if (pros[i].key === record.key) {
+                                    newPros = [...pros.slice(0, i), record, ...pros.slice(i + 1, pros.length - 1)]
+                                }
+                            }
+                            replaceCarProducts(newPros)
+                            message.success(`成功修改${record.name}数量为${v}`)
+                            let allprice = 0
+                            newPros.forEach((pro: any) => {
+                                allprice += pro.buyCount * pro.price
+                            })
+                            props.getAllprice(allprice)
+                        }}
+                        max={100}
+                        min={0}
+                    />
                 )
             }
         },
